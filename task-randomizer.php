@@ -8,8 +8,20 @@
  */
 
 
- print_r( 'Hello World!' );
 
+function helloworld( $content )
+{
+    
+    // print_r('<pre>');
+    // print_r( esc_html( $content ) );
+    // print_r('</pre>');
+
+    $content .= 'Hello World!';
+
+    return $content;
+}
+
+add_filter( 'the_content', 'helloworld' );
 
 
 ?>
