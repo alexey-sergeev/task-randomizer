@@ -4,24 +4,38 @@
  * Description: Составление базы заданий и предъявление задания обучающемуся
  * Plugin URI:  https://github.com/alexey-sergeev/task-randomizer
  * Author:      Alexey N. Sergeev
- * Version:     0.1
+ * Version:     0.2
  */
 
 
+include_once dirname( __FILE__ ) . '/inc/tr-init.php';
 
-function helloworld( $content )
+
+add_action( 'init', 'tr_init' );
+
+function tr_init()
 {
-    
-    // print_r('<pre>');
-    // print_r( esc_html( $content ) );
-    // print_r('</pre>');
+    global $tr;
 
-    $content .= 'Hello World!';
+    $tr = new tr_init();
 
-    return $content;
 }
 
-add_filter( 'the_content', 'helloworld' );
+
+
+// function helloworld( $content )
+// {
+    
+//     // print_r('<pre>');
+//     // print_r( esc_html( $content ) );
+//     // print_r('</pre>');
+
+//     $content .= 'Hello World!';
+
+//     return $content;
+// }
+
+// add_filter( 'the_content', 'helloworld' );
 
 
 ?>
