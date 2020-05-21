@@ -22,18 +22,33 @@ class tr_init extends tr_core {
     {
         parent::__construct();
 
-        add_filter( 'the_content', array( $this, 'helloworld' ) );
+        add_filter( 'the_content', array( $this, 'content' ) );
 
     }
 
 
     // 
-    // Пример работы
+    // Анализ страницы
     // 
 
-    public function helloworld( $content )
+    public function content( $content )
     {
-        $content .= $this->helloworld;
+        if ( is_admin() ) return $content;
+        // if ( ! is_single() ) return $content;
+
+        // p( esc_html($content) );
+        
+        while ( preg_match ( '/\[tasks\][\s\S]*?\[\/tasks\]/', $content, $arr ) ) {
+            
+            $task = ( is_single() ) ? 'Задача' : '';
+            $content = str_replace( $arr[0], $task, $content );
+            
+            // p( $arr );
+            
+        }
+        
+        // p( esc_html($content) );
+        
         return $content;
     }
 
