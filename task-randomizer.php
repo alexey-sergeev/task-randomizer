@@ -4,7 +4,7 @@
  * Description: Составление базы заданий и предъявление задания обучающемуся
  * Plugin URI:  https://github.com/alexey-sergeev/task-randomizer
  * Author:      Alexey N. Sergeev
- * Version:     0.3
+ * Version:     0.4
  */
 
 

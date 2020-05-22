@@ -22,7 +22,7 @@ class tr_init extends tr_core {
     {
         parent::__construct();
 
-        add_filter( 'the_content', array( $this, 'content' ) );
+        add_filter( 'the_content', array( $this, 'content' ), 5 );
 
     }
 
@@ -40,7 +40,12 @@ class tr_init extends tr_core {
         
         while ( preg_match ( '/\[tasks\][\s\S]*?\[\/tasks\]/', $content, $arr ) ) {
             
-            $task = ( is_single() ) ? 'Задача' : '';
+            
+            $parser = new tr_parser( $arr[0] );
+            $arr2 = $parser->get_arr();
+            
+            $task = ( is_single() ) ? $arr2[0] : '';
+
             $content = str_replace( $arr[0], $task, $content );
             
             // p( $arr );
