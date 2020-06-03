@@ -43,9 +43,12 @@ class tr_init extends tr_core {
             
             $parser = new tr_parser( $arr[0] );
             $arr2 = $parser->get_arr();
-            
-            $task = ( is_single() ) ? $arr2[0] : '';
 
+            $param = $parser->get_param();
+
+            p($param);
+
+            $task = ( is_single() ) ? $arr2[0] : '';
             $content = str_replace( $arr[0], $task, $content );
             
             // p( $arr );

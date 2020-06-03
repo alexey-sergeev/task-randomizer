@@ -12,6 +12,17 @@ class tr_parser extends tr_core {
     private $arr = array();
     private $param = array();
 
+    private $allowable_params = array(
+
+        'choice' => array( 'random', 'exam', 'choice' ),
+        'history' => array( 'history', 'simple' ),
+        'unique' => array( 'overlapping', 'unique' )
+
+    );
+
+
+
+
     function __construct( $text )
     {
         parent::__construct();
@@ -66,6 +77,58 @@ class tr_parser extends tr_core {
         $this->param = $param_raw;
         $this->arr = $arr_raw;
 
+    }
+
+
+
+
+    // 
+    // Вернуть параметры
+    // 
+
+    public function get_param()
+    {
+        // p($this->param);
+
+        $num = 1;
+        $params = array( 'random', 'history', 'overlapping' );
+
+        foreach ( $this->param as $item ) {
+
+            if ( preg_match( '/^@n/', $item ) ) {
+
+                $arr = explode( ' ', $item );
+                $num = (int) $arr[1];
+                
+            }
+
+            if ( preg_match( '/^@s/', $item ) ) {
+
+                $params = array_merge( $params, explode( ' ', $item ) );
+                
+            }
+            
+        }
+
+        // p($params);
+
+        $arr2 = array();
+
+        foreach ( $params as $item ) {
+
+            foreach ( $this->allowable_params as $key => $value ) {
+
+                if ( in_array( $item, $value ) ) $arr2[$key] = $item;
+
+            }
+
+        }
+        
+        $arr2['num'] = $num;
+        
+        // p($arr2);
+
+        return $arr2;
     }
 
 
