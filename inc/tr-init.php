@@ -26,6 +26,7 @@ class tr_init extends tr_core {
 
     }
 
+    
 
     // 
     // Анализ страницы
@@ -38,18 +39,25 @@ class tr_init extends tr_core {
 
         // p( esc_html($content) );
         
-        while ( preg_match ( '/\[tasks\][\s\S]*?\[\/tasks\]/', $content, $arr ) ) {
+        while ( preg_match ( '/\[tasks\][\s\S]*?\[\/tasks\]/', $content, $result ) ) {
             
             
-            $parser = new tr_parser( $arr[0] );
-            $arr2 = $parser->get_arr();
-
+            $parser = new tr_parser( $result[0] );
+            $arr = $parser->get_arr();
             $param = $parser->get_param();
 
-            p($param);
+            if ( is_single() ) {
 
-            $task = ( is_single() ) ? $arr2[0] : '';
-            $content = str_replace( $arr[0], $task, $content );
+                $randomizer = new tr_randomizer( $arr, $param );
+                $task = $randomizer->get_text();
+
+            } else {
+
+                $task = '';
+
+            }
+
+            $content = str_replace( $result[0], $task, $content );
             
             // p( $arr );
             
