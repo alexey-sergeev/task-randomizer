@@ -28,7 +28,7 @@ class tr_randomizer extends tr_core {
     private function arr_init( $arr, $param )
     {
         $arr2 = array();
-
+        
         if ( $param['history'] == 'history' ) {
             
             $arr2 = $this->get_history( $arr, $param );
@@ -36,9 +36,11 @@ class tr_randomizer extends tr_core {
             if ( $arr2 ) return $arr2;
             
         }
-        
+
 
         if ( $param['choice'] == 'random' ) {
+
+            if ( $param['unique'] == 'unique' ) $arr = $this->get_unique( $arr );
 
             shuffle( $arr );
             $arr2 = array_slice( $arr, 0, $param['num'] );
@@ -47,9 +49,69 @@ class tr_randomizer extends tr_core {
 
         }
 
+        if ( $param['unique'] == 'unique' ) $this->set_unique( $arr2 );
+        
         return $arr2;
     }
     
+
+    
+    // 
+    // Запомнить выбор задачи
+    // 
+
+    public function set_unique( $arr )
+    {
+        global $post;
+
+        $user_id = get_current_user_id();
+
+        $ret = true;
+
+        foreach ( $arr as $item ) {
+            
+            $data = array(
+                'user' => $user_id,
+                'time' => time(),
+                'task' => $item,
+            );
+            
+            $ret2 = add_post_meta( $post->ID, 'task-unique', $data );
+
+            if ( ! $ret2 ) $ret = false;
+
+        } 
+
+        return $ret;
+    }
+    
+
+    
+    // 
+    // Получить список уникальных задач
+    // 
+
+    public function get_unique( $arr )
+    {
+        global $post;
+
+        $arr2 = get_post_meta( $post->ID, 'task-unique' );
+
+        $arr3 = array();
+
+        foreach ( $arr2 as $data ) {
+
+            // Здесь можно учитывать время и пользователей
+
+            $arr3[] = $data['task'];
+
+        }
+
+        $arr4 = array_diff( $arr, $arr3 );
+        
+        return $arr4;
+    }
+
 
     
     // 
@@ -115,6 +177,8 @@ class tr_randomizer extends tr_core {
     public function get_text()
     {
         $arr = $this->get_arr();
+
+        if ( ! $arr ) $arr[] = 'Нет доступных заданий';
 
         foreach ( $arr as $key => $item ) {
 
