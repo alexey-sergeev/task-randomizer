@@ -10,13 +10,18 @@ defined( 'ABSPATH' ) || exit;
 class tr_randomizer extends tr_core { 
 
     private $arr = array();
+    private $raw = array();
+    private $param = array();
+
     
     function __construct( $arr, $param )
     {
         parent::__construct();
 
         $this->arr = $this->arr_init( $arr, $param );
-        
+        $this->param = $param;
+        $this->raw = $arr;
+
     }
 
     
@@ -37,23 +42,69 @@ class tr_randomizer extends tr_core {
             
         }
 
+        if ( $param['unique'] == 'unique' ) $arr = $this->get_unique( $arr );
 
+        
         if ( $param['choice'] == 'random' ) {
-
-            if ( $param['unique'] == 'unique' ) $arr = $this->get_unique( $arr );
-
+                
             shuffle( $arr );
             $arr2 = array_slice( $arr, 0, $param['num'] );
-
-            if ( $param['history'] == 'history' ) $this->set_history( $arr2 );
-
+            
         }
+        
 
+        if ( $param['choice'] == 'exam' || $param['choice'] == 'choice' ) {
+                
+            $arr2 = $this->get_choice( $arr, $param );
+            
+        }
+        
+
+
+        if ( $param['history'] == 'history' ) $this->set_history( $arr2 );
         if ( $param['unique'] == 'unique' ) $this->set_unique( $arr2 );
         
         return $arr2;
     }
+
     
+
+    
+    // 
+    // Выбор вручную
+    // 
+
+    public function get_choice( $arr, $param )
+    {
+        $arr2 = array();
+
+        // p($_REQUEST);
+
+        $index = array();
+        $user_id = get_current_user_id();
+
+        foreach ( $arr as $item ) $index[md5( $item . $user_id )] = $item;
+
+        // p($index);
+
+        if ( $_REQUEST['choices'] ) {
+
+            $arr3 = array();
+
+            foreach ( $_REQUEST['choices'] as $key => $item ) {
+
+                $arr3[] = $index[$key];
+
+            }
+
+            $arr4 = array_intersect( $arr, $arr3 );
+            if ( count( $arr4 ) == $param['num'] ) $arr2 = $arr3;
+
+        }
+
+        return $arr2;
+    }
+
 
     
     // 
@@ -161,12 +212,75 @@ class tr_randomizer extends tr_core {
     
 
     // 
+    // Выводит все задачи
+    // 
+
+    public function get_raw()
+    {
+        return $this->raw;
+    }
+    
+
+    // 
     // Выводит выбранные задачи в виде массива
     // 
 
     public function get_arr()
     {
         return $this->arr;
+    }
+    
+
+    // 
+    // Получает параметры выбора
+    // 
+
+    public function get_param()
+    {
+        return $this->param;
+    }
+    
+
+    // 
+    // Форма выбора заданий
+    // 
+
+    public function get_form()
+    {
+        $out = '';
+
+        $raw = $this->get_raw();
+        $param = $this->get_param();
+
+        if ( $param['unique'] == 'unique' ) $raw = $this->get_unique( $raw );
+
+        $out .= '<form method="POST">';
+        $out .= '<div class="bg-light p-3 mt-3 mb-3">';
+        
+        $user_id = get_current_user_id();
+
+        $n = 1;
+
+        if ( $param['choice'] == 'exam' ) shuffle( $raw );
+
+        foreach ( $raw as $item ) {
+            
+            $key = md5( $item . $user_id );
+
+            $text = trim( $item );
+
+            if ( $param['choice'] == 'exam' ) $text = 'Задание ' . $n++;
+
+            $out .= '<label><input type="checkbox" name="choices[' . $key . ']"> ' . $text . '</label><br />';
+            
+        }
+        
+        
+        $out .= '<input type="submit" value="Выбрать">';
+        $out .= '</div>';
+        $out .= '</form>';
+
+        return $out;
     }
 
 
@@ -177,7 +291,14 @@ class tr_randomizer extends tr_core {
     public function get_text()
     {
         $arr = $this->get_arr();
+        $param = $this->get_param();
 
+        if ( ( $param['choice'] == 'exam' || $param['choice'] == 'choice' ) && ! $arr ) {
+
+            $out = $this->get_form();
+            return $out;
+        }
+        
         if ( ! $arr ) $arr[] = 'Нет доступных заданий';
 
         foreach ( $arr as $key => $item ) {
