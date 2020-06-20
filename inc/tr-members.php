@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-class tr_members extends tr_core { 
+class mif_tr_members extends mif_tr_core { 
 
     
     function __construct()

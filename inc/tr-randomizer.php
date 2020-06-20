@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-class tr_randomizer extends tr_core { 
+class mif_tr_randomizer extends mif_tr_core { 
 
     private $arr = array();
     private $raw = array();
@@ -78,22 +78,20 @@ class tr_randomizer extends tr_core {
     {
         $arr2 = array();
 
-        // p($_REQUEST);
-
         $index = array();
         $user_id = get_current_user_id();
 
         foreach ( $arr as $item ) $index[md5( $item . $user_id )] = $item;
 
-        // p($index);
-
         if ( $_REQUEST['choices'] ) {
+
+            $choices = array_map( 'sanitize_key', array_keys( $_REQUEST['choices'] ) );
 
             $arr3 = array();
 
-            foreach ( $_REQUEST['choices'] as $key => $item ) {
+            foreach ( $choices as $key ) {
 
-                $arr3[] = $index[$key];
+                if ( isset( $index[$key] ) ) $arr3[] = $index[$key];
 
             }
 

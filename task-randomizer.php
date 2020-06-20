@@ -11,50 +11,43 @@
 include_once dirname( __FILE__ ) . '/inc/tr-init.php';
 
 
+// Инициализация плагина
 
-add_action( 'init', 'tr_init' );
+add_action( 'init', 'mif_tr_init' );
 
-function tr_init()
+function mif_tr_init()
 {
     global $tr;
-
-    $tr = new tr_init();
-
+    
+    $tr = new mif_tr_init();
+    
 }
 
 
 
+// Подключение стилей
 
-add_action( 'wp_enqueue_scripts', 'tr_customizer_styles' );
+add_action( 'wp_enqueue_scripts', 'mif_tr_customizer_styles' );
 
-function tr_customizer_styles() 
+function mif_tr_customizer_styles() 
 {
 	wp_enqueue_style( 'bootstrap', plugins_url( 'lib/bootstrap/css/bootstrap.min.css', __FILE__ ) );
 }
 
 
 
-// function helloworld( $content )
-// {
+// Служебные функции
+
+if ( ! function_exists( p ) ) {
     
-//     // print_r('<pre>');
-//     // print_r( esc_html( $content ) );
-//     // print_r('</pre>');
-
-//     $content .= 'Hello World!';
-
-//     return $content;
-// }
-
-// add_filter( 'the_content', 'helloworld' );
-
-
-function p( $txt )
-{
-
-    print_r( '<pre>' );
-    print_r( $txt );
-    print_r( '</pre>' );
+    function p( $txt )
+    {
+        
+        print_r( '<pre>' );
+        print_r( $txt );
+        print_r( '</pre>' );
+        
+    }
 
 }
 

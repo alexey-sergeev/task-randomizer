@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-class tr_core { 
+class mif_tr_core { 
 
     public $helloworld = 'Hello World!';
     

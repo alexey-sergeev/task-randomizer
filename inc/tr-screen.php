@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-class tr_screen extends tr_core { 
+class mif_tr_screen extends mif_tr_core { 
 
     
     function __construct()

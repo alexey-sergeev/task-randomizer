@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-class tr_parser extends tr_core { 
+class mif_tr_parser extends mif_tr_core { 
 
     private $arr = array();
     private $param = array();
@@ -38,11 +38,8 @@ class tr_parser extends tr_core {
 
     private function parse( $text )
     {
-        // p( $text );
         $arr = array();
         $arr = explode( "\n", $text );
-
-        // p( $arr );
 
         $param_raw = array();
         $arr_raw = array();
@@ -88,8 +85,6 @@ class tr_parser extends tr_core {
 
     public function get_param()
     {
-        // p($this->param);
-
         $num = 1;
         $params = array( 'random', 'history', 'overlapping' );
 
@@ -110,8 +105,6 @@ class tr_parser extends tr_core {
             
         }
 
-        // p($params);
-
         $arr2 = array();
 
         foreach ( $params as $item ) {
@@ -126,8 +119,6 @@ class tr_parser extends tr_core {
         
         $arr2['num'] = $num;
         
-        // p($arr2);
-
         return $arr2;
     }
 

@@ -15,7 +15,7 @@ include_once dirname( __FILE__ ) . '/tr-members.php';
 
 
 
-class tr_init extends tr_core { 
+class mif_tr_init extends mif_tr_core { 
 
     
     function __construct()
@@ -35,20 +35,17 @@ class tr_init extends tr_core {
     public function content( $content )
     {
         if ( is_admin() ) return $content;
-        // if ( ! is_single() ) return $content;
-
-        // p( esc_html($content) );
         
         while ( preg_match ( '/\[tasks\][\s\S]*?\[\/tasks\]/', $content, $result ) ) {
             
             
-            $parser = new tr_parser( $result[0] );
+            $parser = new mif_tr_parser( $result[0] );
             $arr = $parser->get_arr();
             $param = $parser->get_param();
 
             if ( is_single() ) {
 
-                $randomizer = new tr_randomizer( $arr, $param );
+                $randomizer = new mif_tr_randomizer( $arr, $param );
                 $task = $randomizer->get_text();
 
             } else {
@@ -59,12 +56,8 @@ class tr_init extends tr_core {
 
             $content = str_replace( $result[0], $task, $content );
             
-            // p( $arr );
-            
         }
-        
-        // p( esc_html($content) );
-        
+       
         return $content;
     }
 
